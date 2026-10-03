@@ -1,0 +1,33 @@
+name: geo app workflow
+on:
+    workflow_dispatch:
+    push:
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Repository checkout
+          uses: actions/checkout@v7
+
+        - name: List files
+          run: ls -al
+
+        - name: Install dependencies
+          run: pip install -r requirements.txt
+
+        - name: Run test
+          run: python -m pytest
+
+        - name: Upload results
+          uses: actions/upload-artifact@v7
+          with:
+            name: test-results
+            path: htmlcov
+
+
+
+        
+
+
