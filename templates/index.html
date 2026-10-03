@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Overhead: weather, place and space</title>
+  <meta name="description" content="Live weather, place details and space data for anywhere on Earth.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-sky="day">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <a class="brand" href="/" aria-label="Overhead home">Overhead</a>
+
+  <form id="search-form" class="search" role="search" autocomplete="off">
+    <label class="sr-only" for="q">Search for a place</label>
+    <svg class="search-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Search a city or place" role="combobox"
+           aria-expanded="false" aria-controls="suggest" aria-autocomplete="list" enterkeyhint="search">
+    <ul id="suggest" role="listbox" hidden></ul>
+  </form>
+
+  <button id="locate" class="icon-btn" type="button" aria-label="Use my location" title="Use my location">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="8"/></svg>
+  </button>
+
+  <div class="seg" role="group" aria-label="Temperature units">
+    <button type="button" data-u="metric" aria-pressed="true">°C</button>
+    <button type="button" data-u="imperial" aria-pressed="false">°F</button>
+  </div>
+</header>
+
+<main id="main">
+  <div id="banner" class="banner" role="alert" hidden></div>
+
+  <section class="hero" id="hero" aria-busy="true" aria-label="Current conditions">
+    <div class="hero-left">
+      <p class="hero-place"><span id="place-name">Finding the sky…</span></p>
+      <p class="hero-sub" id="place-sub">&nbsp;</p>
+      <p class="hero-clock"><time id="local-time"></time><span id="local-date"></span></p>
+
+      <div class="hero-temp">
+        <span id="temp" class="temp">--</span>
+        <span id="wx-icon" class="wx-icon" aria-hidden="true"></span>
+      </div>
+      <p class="hero-cond" id="cond"></p>
+      <p class="hero-meta"><span id="feels"></span><span id="hilo"></span></p>
+    </div>
+
+    <div class="hero-right">
+      <div id="sky" class="sky" role="img" aria-label="Sun and moon position for the day"></div>
+      <p class="daylight" id="daylight"></p>
+    </div>
+  </section>
+
+  <div class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="t-weather" data-tab="weather" aria-controls="tab-weather" aria-selected="true">Weather</button>
+    <button role="tab" id="t-place" data-tab="place" aria-controls="tab-place" aria-selected="false" tabindex="-1">Place</button>
+    <button role="tab" id="t-space" data-tab="space" aria-controls="tab-space" aria-selected="false" tabindex="-1">Space</button>
+  </div>
+
+  <!-- WEATHER -->
+  <section id="tab-weather" class="panel" role="tabpanel" aria-labelledby="t-weather">
+    <div class="block">
+      <h2>Next 24 hours</h2>
+      <div id="hourly" class="hourly"></div>
+    </div>
+
+    <div class="cols">
+      <div class="block">
+        <h2>Five days</h2>
+        <ol id="daily" class="daily"></ol>
+      </div>
+      <div class="block">
+        <h2>Right now</h2>
+        <dl id="readings" class="facts"></dl>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Air quality</h2>
+      <div id="air" class="air"></div>
+    </div>
+  </section>
+
+  <!-- PLACE -->
+  <section id="tab-place" class="panel" role="tabpanel" aria-labelledby="t-place" hidden>
+    <div class="cols cols-map">
+      <div class="block">
+        <h2>Where this is</h2>
+        <dl id="place-facts" class="facts"></dl>
+      </div>
+      <div class="block">
+        <h2>Map</h2>
+        <div id="place-map" class="map" aria-label="Map of the selected place"></div>
+        <p class="hint">Click the map to check the weather anywhere.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPACE -->
+  <section id="tab-space" class="panel" role="tabpanel" aria-labelledby="t-space" hidden>
+    <div class="block">
+      <h2>International Space Station</h2>
+      <div class="cols cols-map">
+        <dl id="iss-facts" class="facts"></dl>
+        <div>
+          <div id="iss-map" class="map map-tall" aria-label="Live map of the International Space Station"></div>
+          <p class="hint">Solid line is where it has been, dashed is the next 90 minutes.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="block">
+        <h2>Moon tonight</h2>
+        <div id="moon" class="moon"></div>
+      </div>
+      <div class="block">
+        <h2>People in space</h2>
+        <div id="crew" class="crew"></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>NASA picture of the day</h2>
+      <figure id="apod" class="apod"></figure>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  Data from OpenWeather, Open-Meteo, wheretheiss.at, Open Notify and NASA. Map tiles &copy; OpenStreetMap contributors &copy; CARTO.
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
