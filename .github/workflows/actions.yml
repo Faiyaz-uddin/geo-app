@@ -47,6 +47,34 @@ jobs:
                 push: true
                 tags: mdfaiz01/geo-app:v2
 
+    deploy:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Azure Login
+          uses: azure/login@v1
+          with:
+            client-id: "f9e3f06d-96f5-4cf4-bc30-8054cbadd412"
+            tenant-id: "a2baa2da-e78a-412a-8972-fd9cd0686b29"
+            subscription-id: "4a37656d-b956-416d-af8e-44e4f08f0a52"
+
+        - name: Deploy to Azure Container Instance
+          run: |
+              az container create \
+              --resource-group geo-app-rg \
+              --name geo-app \
+              --image mdfaiz01/geo-app:v2 \
+              --cpu 1 \
+              --memory 2 \
+              --ports 5000 \
+              --registry-login-server docker.io \
+              --registry-username ${{ vars.DOCKERHUB_USERNAME }} \
+              --registry-password ${{ secrets.DOCKERHUB_TOKEN }}
+
+
+
+            
+
 
 
 

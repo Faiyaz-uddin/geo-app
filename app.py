@@ -262,7 +262,7 @@ def api_space():
 import os
 
 if __name__ == "__main__":
-    host = os.getenv("HOST", "127.0.0.1")  # default local
+    host = os.getenv("HOST", "0.0.0.0")  # default local
     port = int(os.getenv("PORT", 5000))
     debug = os.getenv("FLASK_DEBUG", "0") == "1"
 
