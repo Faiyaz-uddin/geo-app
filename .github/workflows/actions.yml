@@ -56,7 +56,10 @@ jobs:
         - name: Azure Login
           uses: azure/login@v3
           with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
+            client-id: f9e3f06d-96f5-4cf4-bc30-8054cbadd412
+            tenant-id: a2baa2da-e78a-412a-8972-fd9cd0686b29
+            subscription-id: 4a37656d-b956-416d-af8e-44e4f08f0a52
+            client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
         - name: Deploy to Azure Container Instance
           run: |
@@ -80,5 +83,4 @@ jobs:
 
 
         
-
 
