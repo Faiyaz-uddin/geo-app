@@ -3,9 +3,6 @@ on:
     workflow_dispatch:
     push:
 
-permissions:
-  id-token: write
-  contents: read
 
 jobs:
     test:
@@ -62,7 +59,7 @@ jobs:
             client-id: f9e3f06d-96f5-4cf4-bc30-8054cbadd412
             tenant-id: a2baa2da-e78a-412a-8972-fd9cd0686b29
             subscription-id: 4a37656d-b956-416d-af8e-44e4f08f0a52
-            mask-client-id: false
+            client-secret: fadafd1f-e7db-416b-9181-a9e497ffff00
 
         - name: Deploy to Azure Container Instance
           run: |
